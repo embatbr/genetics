@@ -37,7 +37,7 @@ class BinaryGene(object):
         return (self.allele_1, self.allele_2)
 
 
-class Genome(object):
+class Genotype(object):
     """A collection of Gene objects.
     """
 
@@ -57,7 +57,10 @@ class Genome(object):
         return [gene.phenotype for gene in self.genes]
 
     @property
-    def traits(self):
+    def genome(self):
+        """Collection of traits in a specific order form a Genome. Organisms with
+        same genome can reproduce.
+        """
         return [gene.trait for gene in self.genes]
 
     def split(self):
@@ -73,19 +76,19 @@ class Genome(object):
 
         return (alleles_1, alleles_2)
 
-    def reproduce(genome_1, genome_2):
-        assert genome_1.traits == genome_2.traits, 'Genomes must have same traits'
+    def reproduce(genotype_1, genotype_2):
+        assert genotype_1.genome == genotype_2.genome, 'Genomes must the same'
 
-        genome_1_alleles = random.choice(genome_1.split())
-        genome_2_alleles = random.choice(genome_2.split())
-        traits = genome_1.traits
-        possible_phenotypes = genome_1.possible_phenotypes
+        genotype_1_alleles = random.choice(genotype_1.split())
+        genotype_2_alleles = random.choice(genotype_2.split())
+        genome = genotype_1.genome
+        possible_phenotypes = genotype_1.possible_phenotypes
 
-        zipped = zip(traits, genome_1_alleles, genome_2_alleles, possible_phenotypes)
+        zipped = zip(genome, genotype_1_alleles, genotype_2_alleles, possible_phenotypes)
 
         new_genes = list()
         for (trait, allele_1, allele_2, phenotypes) in zipped:
             new_gene = BinaryGene(trait, allele_1, allele_2, phenotypes)
             new_genes.append(new_gene)
 
-        return Genome(new_genes)
+        return Genotype(new_genes)
