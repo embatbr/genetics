@@ -3,38 +3,38 @@
 
 import random
 
-from base import Gene, Genome
+from base import BinaryGene, Genome, GenomeCarrier
 
 
-class Pea(object):
+class Pea(GenomeCarrier):
     """Pisum sativum.
     """
 
-    def __init__(self, height: Gene, pod_shape: Gene, seed_shape: Gene,
-        peel_color: Gene):
-        self.genome = Genome([height, pod_shape, seed_shape, peel_color])
+    def __init__(self, height: BinaryGene, pod_shape: BinaryGene, seed_shape: BinaryGene,
+        peel_color: BinaryGene):
+        GenomeCarrier.__init__(
+            self,
+            Genome([height, pod_shape, seed_shape, peel_color])
+        )
 
-    def __str__(self):
-        return 'Pea\n{}'.format(str(self.genome))
-
-    def traits_shown(self):
-        return self.genome.traits_shown()
+    def classname(self):
+        return 'Pea'
 
     @classmethod
     def random(cls):
         gen_allele = lambda: random.choice((True, False))
 
         return Pea(
-            height=Gene(
+            height=BinaryGene(
                 'height', gen_allele(), gen_allele(), ('short', 'tall')
             ),
-            pod_shape=Gene(
+            pod_shape=BinaryGene(
                 'pod_shape', gen_allele(), gen_allele(), ('constricted', 'inflated')
             ),
-            seed_shape=Gene(
+            seed_shape=BinaryGene(
                 'seed_shape', gen_allele(), gen_allele(), ('winkled', 'smooth')
             ),
-            peel_color=Gene(
+            peel_color=BinaryGene(
                 'peel_color', gen_allele(), gen_allele(), ('yellow', 'green')
             )
         )

@@ -4,9 +4,9 @@
 import random
 
 
-class Gene(object):
-    """A Gene object is composed of the particular trait it defines and its two
-    alleles.
+class BinaryGene(object):
+    """A BinaryGene object is composed of the particular trait it defines, its
+    two alleles and the traits shown (with only two options).
     """
 
     def __init__(self, trait: str, allele_1: bool, allele_2: bool,
@@ -69,6 +69,22 @@ class Genome(object):
 
     #     return (alleles_1, alleles_2)
 
+
+class GenomeCarrier(object):
+    """Base object that carries a genome.
+    """
+
+    def __init__(self, genome: Genome):
+        self.genome = genome
+
+    def classname(self):
+        raise NotImplementedError()
+
+    def __str__(self):
+        return '{}\n{}'.format(self.classname(), str(self.genome))
+
+    def traits_shown(self):
+        return self.genome.traits_shown()
 
 # TODO create a class GenomeCarrier, with methods "reproduce" and "random", and
 # serving as base for all carriers (e.g., Pea class).
