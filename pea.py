@@ -3,28 +3,28 @@
 
 import random
 
-from base import BinaryGene, Genome, GenomeCarrier
+from base import BinaryGene, Genome
 
 
-class Pea(GenomeCarrier):
+class PeaGenome(Genome):
     """Pisum sativum.
     """
 
     def __init__(self, height: BinaryGene, pod_shape: BinaryGene, seed_shape: BinaryGene,
         peel_color: BinaryGene):
-        GenomeCarrier.__init__(
+        Genome.__init__(
             self,
-            Genome([height, pod_shape, seed_shape, peel_color])
+            [height, pod_shape, seed_shape, peel_color]
         )
 
     def classname(self):
-        return 'Pea'
+        return 'PeaGenome'
 
     @classmethod
     def random(cls):
         gen_allele = lambda: random.choice((True, False))
 
-        return Pea(
+        return PeaGenome(
             height=BinaryGene(
                 'height', gen_allele(), gen_allele(), ('short', 'tall')
             ),
@@ -41,13 +41,20 @@ class Pea(GenomeCarrier):
 
 
 if __name__ == '__main__':
-    pea_1 = Pea.random()
-    pea_2 = Pea.random()
+    pea_1 = PeaGenome.random()
+    pea_2 = PeaGenome.random()
 
     print('[pea_1]')
     print(pea_1)
 
+    print()
+
     print('[pea_2]')
     print(pea_2)
 
-    # pea_1_2_child = Pea.reproduce(pea_1, pea_2)
+    pea_1_2_child = PeaGenome.reproduce(pea_1, pea_2)
+
+    print()
+
+    print('[pea_1_2_child]')
+    print(pea_1_2_child)
