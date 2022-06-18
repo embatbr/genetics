@@ -45,11 +45,13 @@ if __name__ == '__main__':
     pea_2 = PeaGenotype.random()
 
     print('[pea_1]')
+    print('genome:', pea_1.genome)
     print(pea_1)
 
     print()
 
     print('[pea_2]')
+    print('genome:', pea_2.genome)
     print(pea_2)
 
     pea_1_2_child = PeaGenotype.reproduce(pea_1, pea_2)
@@ -57,4 +59,5 @@ if __name__ == '__main__':
     print()
 
     print('[pea_1_2_child]')
+    print('genome:', pea_1_2_child.genome)
     print(pea_1_2_child)
