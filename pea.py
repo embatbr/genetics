@@ -3,15 +3,15 @@
 
 import random
 
-from base import BinaryGene, Genotype
+from base import GeneInDominance, Genotype
 
 
 class PeaGenotype(Genotype):
     """Pisum sativum.
     """
 
-    def __init__(self, height: BinaryGene, pod_shape: BinaryGene, seed_shape: BinaryGene,
-        peel_color: BinaryGene):
+    def __init__(self, height: GeneInDominance, pod_shape: GeneInDominance, seed_shape: GeneInDominance,
+        peel_color: GeneInDominance):
         Genotype.__init__(
             self,
             [height, pod_shape, seed_shape, peel_color]
@@ -25,16 +25,16 @@ class PeaGenotype(Genotype):
         gen_allele = lambda: random.choice((True, False))
 
         return PeaGenotype(
-            height=BinaryGene(
+            height=GeneInDominance(
                 'height', gen_allele(), gen_allele(), ('short', 'tall')
             ),
-            pod_shape=BinaryGene(
+            pod_shape=GeneInDominance(
                 'pod_shape', gen_allele(), gen_allele(), ('constricted', 'inflated')
             ),
-            seed_shape=BinaryGene(
+            seed_shape=GeneInDominance(
                 'seed_shape', gen_allele(), gen_allele(), ('winkled', 'smooth')
             ),
-            peel_color=BinaryGene(
+            peel_color=GeneInDominance(
                 'peel_color', gen_allele(), gen_allele(), ('yellow', 'green')
             )
         )

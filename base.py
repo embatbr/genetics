@@ -4,9 +4,8 @@
 import random
 
 
-class BinaryGene(object):
-    """A BinaryGene object is composed of the particular trait it defines, its
-    two alleles and the possible phenotypes (with only two options).
+class Gene(object):
+    """Gene is the super class for all Gene objects.
     """
 
     def __init__(self, trait: str, allele_1: bool, allele_2: bool,
@@ -14,8 +13,7 @@ class BinaryGene(object):
         """@trait: e.g., color of pea
            @allele_1: true if is dominant, false if recessive
            @allele_2: true if is dominant, false if recessive
-           @possible_phenotypes: tuple with possible phenotypes in format
-           (recessive, DOMINANT), e.g., green or yellow
+           @possible_phenotypes: tuple with possible phenotypes
         """
         self.trait = trait
         self.allele_1 = allele_1
@@ -28,13 +26,37 @@ class BinaryGene(object):
 
     @property
     def phenotype(self):
-        """Observable characteristic for the trait the BinaryGene object represents.
+        """Observable characteristic for the trait the Gene object represents.
+        Basically, the outcome of the gene.
+        """
+        raise NotImplementedError()
+
+    def split(self):
+        return (self.allele_1, self.allele_2)
+
+
+class GeneInDominance(Gene):
+    """Defines a gene which behavior is of dominance. The possible phenotypes are
+    onyle two: (1) dominant (when there is at least one dominant allele) and
+    recessive (when both are recessive).
+    """
+
+    def __init__(self, trait: str, allele_1: bool, allele_2: bool,
+        possible_phenotypes: tuple):
+        assert len(possible_phenotypes) == 2, 'Must be in format (recessive, DOMINANT)'
+
+        Gene.__init__(self, trait, allele_1, allele_2, possible_phenotypes)
+
+    @property
+    def phenotype(self):
+        """Observable characteristic for the trait the Gene object represents.
         Basically, the outcome of the gene.
         """
         return self.possible_phenotypes[int(self.allele_1 or self.allele_2)]
 
-    def split(self):
-        return (self.allele_1, self.allele_2)
+
+# TODO GeneInCodominance
+# TODO GeneInIncompleteDominance
 
 
 class Genotype(object):
@@ -77,7 +99,10 @@ class Genotype(object):
         return (alleles_1, alleles_2)
 
     def reproduce(genotype_1, genotype_2):
-        assert genotype_1.genome == genotype_2.genome, 'Genomes must the same'
+        for (gene_1, gene_2) in zip(genotype_1.genes, genotype_2.genes):
+            assert gene_1.__class__ == gene_2.__class__, 'Genomes must be the same'
+        assert genotype_1.__class__ == genotype_2.__class__, 'Genomes must be the same'
+        assert genotype_1.genome == genotype_2.genome, 'Genomes must be the same'
 
         genotype_1_alleles = random.choice(genotype_1.split())
         genotype_2_alleles = random.choice(genotype_2.split())
@@ -87,8 +112,13 @@ class Genotype(object):
         zipped = zip(genome, genotype_1_alleles, genotype_2_alleles, possible_phenotypes)
 
         new_genes = list()
+        i = 0
         for (trait, allele_1, allele_2, phenotypes) in zipped:
-            new_gene = BinaryGene(trait, allele_1, allele_2, phenotypes)
+            gene_class = genotype_1.genes[i].__class__
+
+            new_gene = gene_class(trait, allele_1, allele_2, phenotypes)
             new_genes.append(new_gene)
+
+            i = i + 1
 
         return Genotype(new_genes)
